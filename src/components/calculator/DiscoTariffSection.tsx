@@ -1,7 +1,8 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
-import type { Band, Disco } from "@/lib/types";
+import { CUSTOMER_TYPES } from "@/lib/types";
+import type { Band, CustomerType, Disco } from "@/lib/types";
 
 const BANDS: Band[] = ["A", "B", "C", "D", "E"];
 
@@ -9,19 +10,24 @@ interface DiscoTariffSectionProps {
   discos: Disco[];
   discoId: number | null;
   band: Band | null;
+  customerType: CustomerType;
   onDiscoChange: (id: number) => void;
   onBandChange: (band: Band) => void;
+  onCustomerTypeChange: (customerType: CustomerType) => void;
 }
 
 export function DiscoTariffSection({
   discos,
   discoId,
   band,
+  customerType,
   onDiscoChange,
   onBandChange,
+  onCustomerTypeChange,
 }: DiscoTariffSectionProps) {
   const selectedDisco = discos.find((d) => d.id === discoId);
   const selectedTariff = selectedDisco?.tariff_bands.find((t) => t.band === band);
+  const selectedRate = selectedTariff ? selectedTariff[`${customerType}_rate`] : null;
 
   return (
     <Card id="section-disco-tariff">
@@ -44,6 +50,12 @@ export function DiscoTariffSection({
           </option>
         ))}
       </select>
+
+      {selectedDisco && !selectedDisco.is_verified && (
+        <p className="mt-2 text-xs text-amber-600">
+          Estimated rates — we haven&apos;t confirmed {selectedDisco.code}&apos;s official tariff table yet.
+        </p>
+      )}
 
       {selectedDisco && (
         <div className="mt-4">
@@ -72,11 +84,37 @@ export function DiscoTariffSection({
         </div>
       )}
 
-      {selectedTariff && (
+      {selectedDisco && (
+        <div className="mt-4">
+          <p className="text-sm font-medium mb-2">Customer Type</p>
+          <div className="flex flex-wrap gap-2">
+            {CUSTOMER_TYPES.map((ct) => (
+              <button
+                key={ct.value}
+                type="button"
+                title={ct.hint}
+                onClick={() => onCustomerTypeChange(ct.value)}
+                className={`rounded-lg border px-3 py-2 text-sm transition-colors ${
+                  customerType === ct.value
+                    ? "border-brand bg-brand-light text-brand-dark font-medium"
+                    : "border-card-border text-foreground/70 hover:border-brand/50"
+                }`}
+              >
+                {ct.label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-1 text-xs text-foreground/50">
+            {CUSTOMER_TYPES.find((ct) => ct.value === customerType)?.hint}
+          </p>
+        </div>
+      )}
+
+      {selectedTariff && selectedRate && (
         <div className="mt-4 rounded-lg border border-brand/30 bg-brand-light px-4 py-3 text-sm text-brand-dark">
           <span className="font-semibold">You are in Band {selectedTariff.band}</span>
           <br />
-          ₦{selectedTariff.rate_per_kwh} per kWh · guaranteed ~{selectedTariff.min_hours_supply}h supply/day
+          ₦{selectedRate} per kWh · guaranteed ~{selectedTariff.min_hours_supply}h supply/day
         </div>
       )}
     </Card>

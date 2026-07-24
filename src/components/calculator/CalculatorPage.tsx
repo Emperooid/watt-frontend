@@ -5,7 +5,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { StepperHeader } from "@/components/layout/StepperHeader";
 import { calculate, getAppliances, getDiscos } from "@/lib/api";
 import { defaultHoursFor } from "./UsagePatternSection";
-import type { Appliance, Band, CalculationResult, Disco, Scenario, WizardItem } from "@/lib/types";
+import type { Appliance, Band, CalculationResult, CustomerType, Disco, Scenario, WizardItem } from "@/lib/types";
 import { DiscoTariffSection } from "./DiscoTariffSection";
 import { AppliancesSection } from "./AppliancesSection";
 import { UsagePatternSection } from "./UsagePatternSection";
@@ -50,6 +50,7 @@ export function CalculatorPage() {
 
   const [discoId, setDiscoId] = useState<number | null>(null);
   const [band, setBand] = useState<Band | null>(null);
+  const [customerType, setCustomerType] = useState<CustomerType>("non_md");
   const [scenario, setScenario] = useState<Scenario>("good");
   const [items, dispatch] = useReducer(itemsReducer, []);
 
@@ -84,6 +85,7 @@ export function CalculatorPage() {
       const decoded = JSON.parse(atob(encoded));
       if (decoded.discoId) setDiscoId(decoded.discoId);
       if (decoded.band) setBand(decoded.band);
+      if (decoded.customerType) setCustomerType(decoded.customerType);
       if (decoded.scenario) setScenario(decoded.scenario);
       if (Array.isArray(decoded.items)) {
         dispatch({
@@ -143,6 +145,7 @@ export function CalculatorPage() {
       calculate({
         disco_id: discoId,
         band,
+        customer_type: customerType,
         scenario,
         items: items.map((i) => ({
           appliance_id: i.applianceId,
@@ -157,7 +160,7 @@ export function CalculatorPage() {
         .finally(() => setCalcLoading(false));
     }, 350);
     return () => clearTimeout(handle);
-  }, [discoId, band, scenario, items]);
+  }, [discoId, band, customerType, scenario, items]);
 
   const activeStep = useMemo(() => {
     if (!discoId || !band) return 1;
@@ -168,7 +171,7 @@ export function CalculatorPage() {
   }, [discoId, band, items.length, calcLoading, result]);
 
   const handleSaveShare = useCallback(() => {
-    const payload = { discoId, band, scenario, items };
+    const payload = { discoId, band, customerType, scenario, items };
     const encoded = btoa(JSON.stringify(payload));
     const url = `${window.location.origin}${window.location.pathname}?state=${encoded}`;
     navigator.clipboard
@@ -181,7 +184,7 @@ export function CalculatorPage() {
         setSavedFeedback("Copy failed");
         setTimeout(() => setSavedFeedback(null), 2000);
       });
-  }, [discoId, band, scenario, items]);
+  }, [discoId, band, customerType, scenario, items]);
 
   if (loadError) {
     return (
@@ -216,8 +219,10 @@ export function CalculatorPage() {
                 discos={discos}
                 discoId={discoId}
                 band={band}
+                customerType={customerType}
                 onDiscoChange={setDiscoId}
                 onBandChange={setBand}
+                onCustomerTypeChange={setCustomerType}
               />
               <AppliancesSection
                 appliances={appliances}

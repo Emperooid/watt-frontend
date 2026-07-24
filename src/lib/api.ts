@@ -1,4 +1,4 @@
-import type { Appliance, CalculationResult, Disco, Scenario } from "./types";
+import type { Appliance, CalculationResult, CustomerType, Disco, Scenario } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
 
@@ -29,6 +29,7 @@ export interface CalculateItemPayload {
 export interface CalculatePayload {
   disco_id: number;
   band: string;
+  customer_type: CustomerType;
   scenario: Scenario;
   items: CalculateItemPayload[];
 }

@@ -1,8 +1,18 @@
 export type Band = "A" | "B" | "C" | "D" | "E";
 
+export type CustomerType = "non_md" | "md1" | "md2";
+
+export const CUSTOMER_TYPES: { value: CustomerType; label: string; hint: string }[] = [
+  { value: "non_md", label: "Non-MD", hint: "Residential / most homes & small businesses" },
+  { value: "md1", label: "MD1", hint: "Maximum Demand 1 — larger commercial" },
+  { value: "md2", label: "MD2", hint: "Maximum Demand 2 — industrial" },
+];
+
 export interface TariffBand {
   band: Band;
-  rate_per_kwh: string;
+  non_md_rate: string;
+  md1_rate: string;
+  md2_rate: string;
   min_hours_supply: number;
 }
 
@@ -10,6 +20,7 @@ export interface Disco {
   id: number;
   code: string;
   name: string;
+  is_verified: boolean;
   tariff_bands: TariffBand[];
 }
 
@@ -80,4 +91,5 @@ export interface CalculationResult {
   insights: string[];
   disco: string;
   band: Band;
+  customer_type: CustomerType;
 }
