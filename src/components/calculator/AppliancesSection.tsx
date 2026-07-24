@@ -51,7 +51,7 @@ export function AppliancesSection({
 
   return (
     <Card id="section-appliances">
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
         <h2 className="text-base font-semibold">2. Add your appliances</h2>
         <button
           type="button"
@@ -132,7 +132,7 @@ export function AppliancesSection({
         </p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-120 text-sm">
             <thead>
               <tr className="text-left text-foreground/50">
                 <th className="pb-2 font-medium">Appliance</th>

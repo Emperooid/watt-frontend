@@ -12,7 +12,7 @@ export function Card({
   return (
     <section
       id={id}
-      className={`rounded-xl border border-card-border bg-card-bg p-5 ${className}`}
+      className={`rounded-xl border border-card-border bg-card-bg p-4 sm:p-5 ${className}`}
     >
       {children}
     </section>

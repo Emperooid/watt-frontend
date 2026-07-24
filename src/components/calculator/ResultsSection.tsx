@@ -8,7 +8,7 @@ import type { CalculationResult } from "@/lib/types";
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-card-border p-4">
+    <div className="rounded-lg border border-card-border p-3 sm:p-4">
       <p className="text-xs text-foreground/50">{label}</p>
       <p className="mt-1 text-lg font-semibold">{value}</p>
     </div>

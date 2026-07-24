@@ -27,7 +27,7 @@ export function StepperHeader({
   savedFeedback,
 }: StepperHeaderProps) {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-card-border bg-card-bg px-6 py-4">
+    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-card-border bg-card-bg px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
       <ol className="flex items-center">
         {STEPS.map((step, index) => {
           const stepNumber = index + 1;
@@ -40,10 +40,10 @@ export function StepperHeader({
                 onClick={() =>
                   document.getElementById(step.id)?.scrollIntoView({ behavior: "smooth", block: "start" })
                 }
-                className="flex flex-col items-center gap-1 px-2"
+                className="flex flex-col items-center gap-1 px-1.5 sm:px-2"
               >
                 <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium border-2 transition-colors ${
+                  className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-xs sm:text-sm font-medium border-2 transition-colors ${
                     isActive
                       ? "bg-brand text-white border-brand"
                       : isDone
@@ -69,7 +69,7 @@ export function StepperHeader({
         })}
       </ol>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <div className="flex items-center gap-1 rounded-lg border border-card-border p-1 text-sm">
           <button
             type="button"
@@ -79,7 +79,7 @@ export function StepperHeader({
             }`}
           >
             <Sun className="h-3.5 w-3.5" />
-            Good day
+            <span className="hidden sm:inline">Good day</span>
           </button>
           <button
             type="button"
@@ -89,17 +89,17 @@ export function StepperHeader({
             }`}
           >
             <CloudRain className="h-3.5 w-3.5" />
-            Bad day
+            <span className="hidden sm:inline">Bad day</span>
           </button>
         </div>
 
         <button
           type="button"
           onClick={onSaveShare}
-          className="flex items-center gap-2 rounded-lg border border-brand px-3 py-2 text-sm font-medium text-brand hover:bg-brand-light"
+          className="flex items-center gap-2 rounded-lg border border-brand px-2.5 py-1.5 sm:px-3 sm:py-2 text-sm font-medium text-brand hover:bg-brand-light"
         >
           <Share2 className="h-4 w-4" />
-          {savedFeedback ?? "Save & Share"}
+          <span className="hidden sm:inline">{savedFeedback ?? "Save & Share"}</span>
         </button>
       </div>
     </header>

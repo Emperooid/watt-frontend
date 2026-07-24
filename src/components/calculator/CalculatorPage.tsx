@@ -197,9 +197,9 @@ export function CalculatorPage() {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-col lg:flex-row min-h-screen">
       <Sidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col min-w-0">
         <StepperHeader
           activeStep={activeStep}
           scenario={scenario}
@@ -207,47 +207,49 @@ export function CalculatorPage() {
           onSaveShare={handleSaveShare}
           savedFeedback={savedFeedback}
         />
-        <main className="flex-1 px-6 py-6">
-          <h1 className="text-2xl font-semibold">Let&apos;s estimate your electricity cost</h1>
-          <p className="text-sm text-foreground/60 mt-1 mb-6">
-            Follow the steps to see how much you spend and how you can save.
-          </p>
+        <main className="flex-1 px-4 py-4 sm:px-6 sm:py-6">
+          <div className="mx-auto max-w-6xl">
+            <h1 className="text-lg sm:text-xl font-semibold">Let&apos;s estimate your electricity cost</h1>
+            <p className="text-sm text-foreground/60 mt-1 mb-4 sm:mb-6">
+              Follow the steps to see how much you spend and how you can save.
+            </p>
 
-          <div className="flex flex-col lg:flex-row gap-6">
-            <div className="flex-1 space-y-6">
-              <DiscoTariffSection
-                discos={discos}
-                discoId={discoId}
-                band={band}
-                customerType={customerType}
-                onDiscoChange={setDiscoId}
-                onBandChange={setBand}
-                onCustomerTypeChange={setCustomerType}
+            <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+              <div className="flex-1 min-w-0 space-y-4 sm:space-y-6">
+                <DiscoTariffSection
+                  discos={discos}
+                  discoId={discoId}
+                  band={band}
+                  customerType={customerType}
+                  onDiscoChange={setDiscoId}
+                  onBandChange={setBand}
+                  onCustomerTypeChange={setCustomerType}
+                />
+                <AppliancesSection
+                  appliances={appliances}
+                  items={items}
+                  onAdd={addAppliance}
+                  onAddCustom={addCustomAppliance}
+                  onUpdateItem={(clientId, patch) => dispatch({ type: "update", clientId, patch })}
+                  onRemoveItem={(clientId) => dispatch({ type: "remove", clientId })}
+                />
+                <UsagePatternSection
+                  items={items}
+                  onUpdateItem={(clientId, patch) => dispatch({ type: "update", clientId, patch })}
+                  onResetToDefaults={() => dispatch({ type: "reset_hours" })}
+                />
+                <ReviewSection result={result} loading={calcLoading} error={calcError} />
+                <ResultsSection result={result} />
+              </div>
+
+              <SummaryPanel
+                scenario={scenario}
+                onScenarioChange={setScenario}
+                result={result}
+                loading={calcLoading}
+                error={calcError}
               />
-              <AppliancesSection
-                appliances={appliances}
-                items={items}
-                onAdd={addAppliance}
-                onAddCustom={addCustomAppliance}
-                onUpdateItem={(clientId, patch) => dispatch({ type: "update", clientId, patch })}
-                onRemoveItem={(clientId) => dispatch({ type: "remove", clientId })}
-              />
-              <UsagePatternSection
-                items={items}
-                onUpdateItem={(clientId, patch) => dispatch({ type: "update", clientId, patch })}
-                onResetToDefaults={() => dispatch({ type: "reset_hours" })}
-              />
-              <ReviewSection result={result} loading={calcLoading} error={calcError} />
-              <ResultsSection result={result} />
             </div>
-
-            <SummaryPanel
-              scenario={scenario}
-              onScenarioChange={setScenario}
-              result={result}
-              loading={calcLoading}
-              error={calcError}
-            />
           </div>
         </main>
       </div>

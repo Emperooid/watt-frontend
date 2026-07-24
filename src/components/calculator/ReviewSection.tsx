@@ -28,7 +28,7 @@ export function ReviewSection({ result, loading, error }: ReviewSectionProps) {
 
       {!error && result && (
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-96 text-sm">
             <thead>
               <tr className="text-left text-foreground/50">
                 <th className="pb-2 font-medium">Appliance</th>

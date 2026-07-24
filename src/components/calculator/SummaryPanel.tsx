@@ -18,7 +18,7 @@ export function SummaryPanel({ scenario, onScenarioChange, result, loading, erro
   const [showBreakdown, setShowBreakdown] = useState(false);
 
   return (
-    <aside className="w-full lg:w-80 shrink-0 space-y-4">
+    <aside className="w-full lg:w-72 shrink-0 space-y-3 sm:space-y-4">
       <Card>
         <h3 className="text-sm font-semibold mb-3">Your Estimation Summary</h3>
 
