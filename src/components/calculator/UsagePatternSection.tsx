@@ -67,7 +67,7 @@ export function UsagePatternSection({ items, onUpdateItem, onResetToDefaults }: 
                         onChange={(e) =>
                           onUpdateItem(item.clientId, { hoursPerDay: Number(e.target.value) })
                         }
-                        className="w-14 rounded-md border border-card-border bg-transparent px-2 py-1 text-center"
+                        className="w-14 rounded-md border border-card-border bg-card-bg text-foreground px-2 py-1 text-center"
                       />
                       <button
                         type="button"

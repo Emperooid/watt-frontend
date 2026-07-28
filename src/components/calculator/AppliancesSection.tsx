@@ -74,7 +74,7 @@ export function AppliancesSection({
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
               placeholder="e.g. Aquarium Pump"
-              className="w-full rounded-md border border-card-border bg-transparent px-2 py-1.5 text-sm"
+              className="w-full rounded-md border border-card-border bg-card-bg text-foreground px-2 py-1.5 text-sm"
             />
           </div>
           <div className="w-28">
@@ -84,7 +84,7 @@ export function AppliancesSection({
               value={customWatts}
               onChange={(e) => setCustomWatts(e.target.value)}
               placeholder="W"
-              className="w-full rounded-md border border-card-border bg-transparent px-2 py-1.5 text-sm"
+              className="w-full rounded-md border border-card-border bg-card-bg text-foreground px-2 py-1.5 text-sm"
             />
           </div>
           <button
@@ -103,7 +103,7 @@ export function AppliancesSection({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search appliances (e.g. Fan, TV, AC)"
-          className="w-full rounded-lg border border-card-border bg-transparent py-2 pl-9 pr-3 text-sm"
+          className="w-full rounded-lg border border-card-border bg-card-bg text-foreground py-2 pl-9 pr-3 text-sm"
         />
         {suggestions.length > 0 && (
           <ul className="absolute z-10 mt-1 w-full rounded-lg border border-card-border bg-card-bg shadow-lg">
@@ -150,7 +150,7 @@ export function AppliancesSection({
                       type="number"
                       value={item.watts}
                       onChange={(e) => onUpdateItem(item.clientId, { watts: Number(e.target.value) })}
-                      className="w-20 rounded-md border border-card-border bg-transparent px-2 py-1"
+                      className="w-20 rounded-md border border-card-border bg-card-bg text-foreground px-2 py-1"
                     />
                   </td>
                   <td className="py-2 pr-2">

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   BookOpen,
   Calculator,
   HelpCircle,
+  Home,
   Info,
   Lightbulb,
   ListChecks,
@@ -21,7 +23,8 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Calculate Cost", icon: Calculator, href: "/", enabled: true },
+  { label: "Home", icon: Home, href: "/", enabled: true },
+  { label: "Home Planner", icon: Calculator, href: "/planner", enabled: true },
   { label: "My Scenarios", icon: ListChecks, href: "#", enabled: false },
   { label: "Tips & Insights", icon: Lightbulb, href: "#", enabled: false },
   { label: "Electricity 101", icon: BookOpen, href: "#", enabled: false },
@@ -33,34 +36,46 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
       <div>
-        <div className="flex items-center gap-2 px-2 mb-6">
+        <Link href="/" className="flex items-center gap-2 px-2 mb-6">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
             <Zap className="h-4 w-4 text-white" fill="white" />
           </span>
           <div>
-            <p className="text-base font-semibold text-white leading-tight">PowerWise</p>
-            <p className="text-xs text-sidebar-fg-muted leading-tight">Know. Plan. Save.</p>
+            <p className="text-base font-semibold text-white leading-tight">WattAmIUsing</p>
+            <p className="text-xs text-sidebar-fg-muted leading-tight">Home Planner</p>
           </div>
-        </div>
+        </Link>
 
         <nav className="flex flex-col gap-1">
-          {NAV_ITEMS.map(({ label, icon: Icon, enabled }) => (
-            <button
-              key={label}
-              type="button"
-              disabled={!enabled}
-              title={enabled ? undefined : "Coming soon"}
-              onClick={onNavigate}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-left transition-colors ${
-                enabled
-                  ? "bg-brand text-white font-medium"
-                  : "text-sidebar-fg-muted hover:bg-sidebar-bg-hover disabled:cursor-not-allowed"
-              }`}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              {label}
-            </button>
-          ))}
+          {NAV_ITEMS.map(({ label, icon: Icon, href, enabled }) => {
+            const isPlanner = href === "/planner";
+            const content = (
+              <>
+                <Icon className="h-4 w-4 shrink-0" />
+                {label}
+              </>
+            );
+            const className = `flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-left transition-colors ${
+              isPlanner
+                ? "bg-brand text-white font-medium"
+                : enabled
+                ? "text-sidebar-fg hover:bg-sidebar-bg-hover"
+                : "text-sidebar-fg-muted hover:bg-sidebar-bg-hover cursor-not-allowed"
+            }`;
+
+            if (!enabled) {
+              return (
+                <button key={label} type="button" disabled title="Coming soon" className={className}>
+                  {content}
+                </button>
+              );
+            }
+            return (
+              <Link key={label} href={href} onClick={onNavigate} className={className}>
+                {content}
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
@@ -89,12 +104,12 @@ export function Sidebar() {
     <>
       {/* Mobile top bar */}
       <div className="flex lg:hidden items-center justify-between bg-sidebar-bg text-sidebar-fg px-4 py-3">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
             <Zap className="h-4 w-4 text-white" fill="white" />
           </span>
-          <p className="text-base font-semibold text-white leading-tight">PowerWise</p>
-        </div>
+          <p className="text-base font-semibold text-white leading-tight">WattAmIUsing</p>
+        </Link>
         <button
           type="button"
           onClick={() => setMobileOpen(true)}

@@ -39,7 +39,7 @@ export function DiscoTariffSection({
       <select
         value={discoId ?? ""}
         onChange={(e) => onDiscoChange(Number(e.target.value))}
-        className="w-full rounded-lg border border-card-border bg-transparent px-3 py-2 text-sm"
+        className="w-full rounded-lg border border-card-border bg-card-bg text-foreground px-3 py-2 text-sm"
       >
         <option value="" disabled>
           Choose a Disco

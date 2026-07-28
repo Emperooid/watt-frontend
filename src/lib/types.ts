@@ -71,6 +71,7 @@ export interface CalculationLineResult {
 export interface CalculationTotals {
   daily_kwh: number;
   daily_cost: number;
+  weekly_cost: number;
   monthly_kwh: number;
   monthly_cost: number;
   yearly_cost: number;
@@ -82,6 +83,14 @@ export interface CalculationRanking {
   share_pct: number;
 }
 
+export interface GeneratorComparison {
+  grid_cost_per_month: number;
+  generator_cost_per_month: number;
+  savings_amount: number;
+  savings_pct: number;
+  assumptions: string;
+}
+
 export interface CalculationResult {
   scenario: Scenario;
   rate_per_kwh: number;
@@ -89,6 +98,7 @@ export interface CalculationResult {
   totals: CalculationTotals;
   ranking: CalculationRanking[];
   insights: string[];
+  generator_comparison: GeneratorComparison;
   disco: string;
   band: Band;
   customer_type: CustomerType;

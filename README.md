@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WattAmIUsing — Frontend
 
-## Getting Started
+Next.js frontend for WattAmIUsing, a free tool that helps Nigerians estimate how much their appliances
+cost to run on their local electricity tariff.
 
-First, run the development server:
+Live site: https://watt-frontend.vercel.app/
+
+## Stack
+
+- Next.js 15 (App Router), TypeScript, Tailwind CSS v4
+- No external UI library — hand-built components in `src/components`
+
+## Routes
+
+- `/` — the public landing page: hero, quick single-appliance calculator, energy tips, about, and the
+  Version 2 waitlist.
+- `/planner` — the full "Home Planner" wizard (add multiple appliances, usage patterns, Good Day/Bad Day
+  scenarios, review, and results). Reached from the landing page via the "Plan your whole home" / "Open
+  Home Planner" buttons.
+
+## Local setup
 
 ```bash
+npm install
+cp .env.local.example .env.local   # if present; otherwise see below
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. The dev server needs the backend running locally too — see
+`../wattbackend/README.md`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `NEXT_PUBLIC_API_URL` — base URL of the backend API, e.g. `http://localhost:8000/api` for local dev or
+  `https://watt-backend-qin8.onrender.com/api` for production. If unset, the app auto-detects: it uses
+  `http://localhost:8000/api` when running on `localhost`/`127.0.0.1`, and the deployed Render URL
+  otherwise — see `src/lib/api.ts`. Setting the env var explicitly always takes precedence.
 
-## Learn More
+## A note on the local dev environment
 
-To learn more about Next.js, take a look at the following resources:
+This project was built on a machine where the shell has a persistent `NODE_ENV=production` env var, which
+breaks `next dev`'s CSS pipeline and makes `npm install` silently skip devDependencies. Both are worked
+around already:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm install --include=dev` if dependencies ever look incomplete (missing `typescript`, `eslint`, etc.)
+- The `dev` script is wrapped in `cross-env NODE_ENV=development` in `package.json`, so `npm run dev` is
+  safe to run as-is regardless of the ambient `NODE_ENV`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+- `npm run dev` — start the dev server
+- `npm run build` — production build
+- `npm run lint` — ESLint
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment (Vercel)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploys from `main`. Set `NEXT_PUBLIC_API_URL` in the Vercel project's Environment Variables (see
+`.env.vercel`, gitignored, for the exact value used for this project's deployment) — though the app will
+still work without it, thanks to the auto-detection described above.
+
+## Workflow
+
+Work happens on `dev` and gets merged into `main` (the branch Vercel deploys from) once verified locally.
