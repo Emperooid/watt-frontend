@@ -1,4 +1,5 @@
 import { About } from "@/components/landing/About";
+import { AdditionalTools } from "@/components/landing/AdditionalTools";
 import { EnergyTips } from "@/components/landing/EnergyTips";
 import { Footer } from "@/components/landing/Footer";
 import { Hero } from "@/components/landing/Hero";
@@ -13,6 +14,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <QuickCalculator />
+        <AdditionalTools />
         <EnergyTips />
         <About />
         <WaitlistSection />
