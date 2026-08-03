@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f6f8f7;
+  --background: #f3f7d9;
+  --background-warm: #fbfce8;
   --foreground: #101815;
 
   --brand: #16a34a;
   --brand-dark: #0e7a37;
   --brand-light: #dcfce7;
+  --brand-glow: #86efac;
 
   --sidebar-bg: #07160e;
   --sidebar-bg-hover: #10261a;
@@ -24,10 +26,12 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-warm: var(--background-warm);
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
   --color-brand-light: var(--brand-light);
+  --color-brand-glow: var(--brand-glow);
   --color-sidebar-bg: var(--sidebar-bg);
   --color-sidebar-bg-hover: var(--sidebar-bg-hover);
   --color-sidebar-fg: var(--sidebar-fg);
@@ -106,10 +110,70 @@ body {
   animation: item-float 4s ease-in-out infinite;
 }
 
+@keyframes bolt-flicker {
+  0%,
+  18%,
+  22%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px var(--brand-glow)) drop-shadow(0 0 14px var(--brand));
+  }
+  20% {
+    opacity: 0.4;
+    filter: drop-shadow(0 0 2px var(--brand-glow));
+  }
+  45%,
+  48% {
+    opacity: 0.5;
+    filter: drop-shadow(0 0 2px var(--brand-glow));
+  }
+  46% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px var(--brand-glow)) drop-shadow(0 0 20px var(--brand));
+  }
+}
+
+@keyframes electric-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 12px var(--brand-glow), 0 0 2px var(--brand-glow);
+  }
+  50% {
+    text-shadow: 0 0 24px var(--brand-glow), 0 0 6px var(--brand-glow);
+  }
+}
+
+@keyframes spark-pop {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-bolt-flicker {
+  animation: bolt-flicker 3.2s ease-in-out infinite;
+}
+
+.animate-electric-glow {
+  animation: electric-glow 2.4s ease-in-out infinite;
+}
+
+.animate-spark-pop {
+  animation: spark-pop 1.6s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-bird-flap,
   .animate-bird-drift,
-  .animate-item-float {
+  .animate-item-float,
+  .animate-bolt-flicker,
+  .animate-electric-glow,
+  .animate-spark-pop {
     animation: none;
   }
 }

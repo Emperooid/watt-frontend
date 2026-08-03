@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { CalendarDays, Coins, Wallet, Zap } from "lucide-react";
-import { getDiscos } from "@/lib/api";
 import { formatKwh, formatNaira } from "@/lib/format";
-import type { Band, Disco } from "@/lib/types";
+import { useDiscos } from "@/lib/useDiscos";
+import type { Band } from "@/lib/types";
 
 const BANDS: Band[] = ["A", "B", "C", "D", "E"];
 type Mode = "have-money" | "need-days";
 
 export function RechargeCalculator() {
-  const [discos, setDiscos] = useState<Disco[]>([]);
+  const { discos } = useDiscos();
   const [discoId, setDiscoId] = useState<number | null>(null);
   const [band, setBand] = useState<Band | null>(null);
   const [mode, setMode] = useState<Mode>("have-money");
@@ -19,15 +19,14 @@ export function RechargeCalculator() {
   const [avgDailyKwh, setAvgDailyKwh] = useState<number | "">(5);
 
   useEffect(() => {
-    getDiscos().then((d) => {
-      setDiscos(d);
-      const preferred = d.find((disco) => disco.is_verified) ?? d[0];
-      if (preferred) {
-        setDiscoId(preferred.id);
-        setBand(preferred.tariff_bands.some((t) => t.band === "B") ? "B" : preferred.tariff_bands[0]?.band ?? null);
-      }
-    });
-  }, []);
+    if (discoId !== null || discos.length === 0) return;
+    const preferred = discos.find((disco) => disco.is_verified) ?? discos[0];
+    if (preferred) {
+      setDiscoId(preferred.id);
+      setBand(preferred.tariff_bands.some((t) => t.band === "B") ? "B" : preferred.tariff_bands[0]?.band ?? null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discos]);
 
   const selectedDisco = discos.find((d) => d.id === discoId);
   const selectedTariff = selectedDisco?.tariff_bands.find((t) => t.band === band);

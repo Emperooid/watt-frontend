@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Clock, Fuel, Lightbulb, PartyPopper, Share2, Zap } from "lucide-react";
-import { calculate, getAppliances, getDiscos } from "@/lib/api";
+import { calculate, getAppliances } from "@/lib/api";
 import { formatKwh, formatNaira } from "@/lib/format";
 import { ApplianceIcon } from "@/lib/applianceIcons";
-import type { Appliance, Band, CalculationResult, Disco } from "@/lib/types";
+import { DurationInput } from "@/components/ui/DurationInput";
+import { useDiscos } from "@/lib/useDiscos";
+import type { Appliance, Band, CalculationResult } from "@/lib/types";
 
 const BANDS: Band[] = ["A", "B", "C", "D", "E"];
 
@@ -36,7 +38,7 @@ function StatCard({
 }
 
 export function QuickCalculator() {
-  const [discos, setDiscos] = useState<Disco[]>([]);
+  const { discos, error: discosError } = useDiscos();
   const [appliances, setAppliances] = useState<Appliance[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -52,18 +54,20 @@ export function QuickCalculator() {
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([getDiscos(), getAppliances()])
-      .then(([d, a]) => {
-        setDiscos(d);
-        setAppliances(a);
-        const preferred = d.find((disco) => disco.is_verified) ?? d[0];
-        if (preferred) {
-          setDiscoId(preferred.id);
-          setBand(preferred.tariff_bands.some((t) => t.band === "B") ? "B" : preferred.tariff_bands[0]?.band ?? null);
-        }
-      })
+    getAppliances()
+      .then(setAppliances)
       .catch((err) => setLoadError(err instanceof Error ? err.message : "Failed to load data."));
   }, []);
+
+  useEffect(() => {
+    if (discoId !== null || discos.length === 0) return;
+    const preferred = discos.find((disco) => disco.is_verified) ?? discos[0];
+    if (preferred) {
+      setDiscoId(preferred.id);
+      setBand(preferred.tariff_bands.some((t) => t.band === "B") ? "B" : preferred.tariff_bands[0]?.band ?? null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discos]);
 
   const selectedDisco = discos.find((d) => d.id === discoId);
   const selectedAppliance = appliances.find((a) => a.id === applianceId);
@@ -132,10 +136,15 @@ export function QuickCalculator() {
 
   const insight = useMemo(() => result?.insights[0], [result]);
 
-  if (loadError) {
+  // Instantaneous rate for running this appliance right now, independent of
+  // the daily-usage hours entered — useful as a quick reference figure.
+  const costPerHour = result && watts ? (Number(watts) / 1000) * result.rate_per_kwh : null;
+  const costPerMinute = costPerHour !== null ? costPerHour / 60 : null;
+
+  if (loadError || discosError) {
     return (
       <p className="mx-auto max-w-6xl px-4 text-center text-sm text-red-500 sm:px-6">
-        Couldn&apos;t reach the API ({loadError}). Make sure the backend is running.
+        Couldn&apos;t reach the API ({loadError ?? discosError}). Make sure the backend is running.
       </p>
     );
   }
@@ -226,15 +235,8 @@ export function QuickCalculator() {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-foreground/60">5. Daily Usage (Hours)</label>
-            <input
-              type="number"
-              min={0}
-              max={24}
-              value={hours}
-              onChange={(e) => setHours(e.target.value === "" ? "" : Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-card-border bg-card-bg text-foreground px-3 py-2 text-sm"
-            />
+            <label className="text-xs font-medium text-foreground/60">5. Daily Usage</label>
+            <DurationInput hours={hours} onChange={setHours} className="mt-1" />
           </div>
         </div>
 
@@ -266,13 +268,27 @@ export function QuickCalculator() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            <StatCard
+              icon={Clock}
+              iconClass="bg-slate-100 text-slate-600"
+              label="Cost / Minute"
+              value={formatNaira(costPerMinute ?? 0, 2)}
+              hint="Running now"
+            />
+            <StatCard
+              icon={Clock}
+              iconClass="bg-slate-100 text-slate-600"
+              label="Cost / Hour"
+              value={formatNaira(costPerHour ?? 0)}
+              hint="Running now"
+            />
             <StatCard
               icon={Zap}
               iconClass="bg-brand-light text-brand"
               label="Daily Cost"
               value={formatNaira(result.totals.daily_cost)}
-              hint="Per day"
+              hint={`${formatKwh(result.totals.daily_kwh)} used`}
             />
             <StatCard
               icon={Clock}
@@ -291,7 +307,7 @@ export function QuickCalculator() {
             <StatCard
               icon={Zap}
               iconClass="bg-purple-100 text-purple-600"
-              label="Electricity Used"
+              label="Units Consumed"
               value={formatKwh(result.totals.monthly_kwh)}
               hint="Per month"
             />
