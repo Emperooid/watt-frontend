@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AtSign, Globe, Mail, MessageCircle, Zap } from "lucide-react";
+import { AtSign, Globe, Mail, MessageCircle } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 import { WaitlistForm } from "./WaitlistForm";
 
 const QUICK_LINKS = [
@@ -19,9 +20,7 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
-                <Zap className="h-4 w-4 text-white" fill="white" />
-              </span>
+              <Logo className="h-8 w-8" />
               <p className="font-semibold text-white">WattAmIUsing</p>
             </div>
             <p className="mt-3 text-sm text-sidebar-fg-muted">

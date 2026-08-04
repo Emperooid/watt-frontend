@@ -288,7 +288,7 @@ export function QuickCalculator() {
               iconClass="bg-brand-light text-brand"
               label="Daily Cost"
               value={formatNaira(result.totals.daily_cost)}
-              hint={`${formatKwh(result.totals.daily_kwh)} used`}
+              hint={`For ${hours} hrs/day · ${formatKwh(result.totals.daily_kwh)}`}
             />
             <StatCard
               icon={Clock}

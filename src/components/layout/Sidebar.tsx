@@ -14,6 +14,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import { Logo } from "@/components/ui/Logo";
 
 interface NavItem {
   label: string;
@@ -37,9 +38,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     <>
       <div>
         <Link href="/" className="flex items-center gap-2 px-2 mb-6">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
-            <Zap className="h-4 w-4 text-white" fill="white" />
-          </span>
+          <Logo className="h-8 w-8" />
           <div>
             <p className="text-base font-semibold text-white leading-tight">WattAmIUsing</p>
             <p className="text-xs text-sidebar-fg-muted leading-tight">Home Planner</p>
@@ -105,9 +104,7 @@ export function Sidebar() {
       {/* Mobile top bar */}
       <div className="flex lg:hidden items-center justify-between bg-sidebar-bg text-sidebar-fg px-4 py-3">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand">
-            <Zap className="h-4 w-4 text-white" fill="white" />
-          </span>
+          <Logo className="h-8 w-8" />
           <p className="text-base font-semibold text-white leading-tight">WattAmIUsing</p>
         </Link>
         <button
