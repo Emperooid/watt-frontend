@@ -11,6 +11,7 @@ import { AppliancesSection } from "./AppliancesSection";
 import { UsagePatternSection } from "./UsagePatternSection";
 import { ReviewSection } from "./ReviewSection";
 import { ResultsSection } from "./ResultsSection";
+import { PdfReportCTA } from "./PdfReportCTA";
 import { SummaryPanel } from "./SummaryPanel";
 
 type ItemsAction =
@@ -240,6 +241,15 @@ export function CalculatorPage() {
                 />
                 <ReviewSection result={result} loading={calcLoading} error={calcError} />
                 <ResultsSection result={result} />
+                {result && (
+                  <PdfReportCTA
+                    discoId={discoId}
+                    band={band}
+                    customerType={customerType}
+                    scenario={scenario}
+                    items={items}
+                  />
+                )}
               </div>
 
               <SummaryPanel

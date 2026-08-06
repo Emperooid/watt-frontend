@@ -76,3 +76,35 @@ export async function joinWaitlist(email: string): Promise<WaitlistResponse> {
   }
   return res.json();
 }
+
+export interface ReportInitiatePayload extends CalculatePayload {
+  email: string;
+}
+
+export interface ReportInitiateResponse {
+  authorization_url: string;
+  reference: string;
+}
+
+export async function initiateReport(payload: ReportInitiatePayload): Promise<ReportInitiateResponse> {
+  const res = await fetch(`${getApiBase()}/reports/initiate/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.detail ?? body?.email?.[0] ?? "Couldn't start checkout. Please try again.");
+  }
+  return res.json();
+}
+
+export interface ReportStatusResponse {
+  reference: string;
+  status: "pending" | "paid" | "failed";
+  report_sent: boolean;
+}
+
+export function getReportStatus(reference: string): Promise<ReportStatusResponse> {
+  return apiGet<ReportStatusResponse>(`/reports/verify/${encodeURIComponent(reference)}/`);
+}
